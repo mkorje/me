@@ -1,0 +1,16 @@
+# CV-only. One entry per degree; order preserved as written.
+#
+# Schema per entry:
+#   degree     (string, required)
+#   org        (string, required)
+#   location   (string, optional)
+#   start      (string, required)
+#   end        (string, optional)
+#   thesis     (string, optional)
+#   supervisor (string, optional)
+
+[[education]]
+degree = "Degree"
+org    = "University"
+start  = "20XX"
+end    = "20XX"

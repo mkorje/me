@@ -1,0 +1,8 @@
+# Site-wide config. Only contains plain-string values so the file is
+# editable without touching Typst. Structured bits that reference Typst
+# labels (nav, etc.) live next to the layout code.
+
+name        = "mkor.je"
+url         = "https://mkor.je"   # only used for absolute URLs (RSS)
+author      = "mkorje"
+description = "Personal site."

@@ -1,0 +1,7 @@
+# Shared identity block. Used by the site (footer/header hooks later if
+# wanted) and by the CV header.
+name     = "mkorje"
+email    = "you@example.com"
+website  = "https://mkor.je"
+github   = "https://github.com/mkorje"
+tagline  = "Short one-liner about what you do."

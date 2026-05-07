@@ -1,0 +1,20 @@
+# Shared paper list. Rendered on the site (pages/papers.typ) and in the
+# CV (cv/cv.typ).
+#
+# Schema per entry:
+#   title    (string, required)
+#   authors  (string, required) — already-formatted display string, e.g.
+#            "mkorje, A. N. Other"
+#   venue    (string, optional) — journal/conference/preprint label
+#   year     (int,    required)
+#   url      (string, optional) — preprint / publisher link
+#   code     (string, optional) — repo link
+#   slides   (string, optional)
+
+[[papers]]
+title   = "A placeholder paper title"
+authors = "mkorje, A. N. Other"
+venue   = "Preprint"
+year    = 2025
+url     = "https://example.com"
+code    = "https://example.com"

@@ -1,0 +1,19 @@
+# CV-only. One entry per role; order preserved as written.
+#
+# Schema per entry:
+#   role      (string, required)
+#   org       (string, required)
+#   location  (string, optional)
+#   start     (string, required) — free-form, e.g. "2023" or "Jan 2023"
+#   end       (string, optional) — omit for "present"
+#   bullets   (list of string, optional)
+
+[[experience]]
+role     = "Role title"
+org      = "Organisation"
+location = "City, Country"
+start    = "2024"
+bullets  = [
+  "What you did, and the impact.",
+  "Another bullet.",
+]

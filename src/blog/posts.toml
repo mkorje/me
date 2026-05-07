@@ -1,0 +1,16 @@
+# Blog manifest. Each [[posts]] entry becomes a page at /blog/<slug>.html
+# and an item in the index + RSS feed.
+#
+# Fields:
+#   slug    — URL segment (filename without extension)
+#   title   — shown in the index, RSS, <title>
+#   date    — ISO YYYY-MM-DD; drives sort order and RSS pubDate
+#   file    — path relative to blog/posts/
+#   summary — optional; appears in the index and RSS <description>
+
+[[posts]]
+slug = "hello"
+title = "hello, world"
+date = "2026-04-18"
+file = "2026-04-18-hello.typ"
+summary = "First post. Testing the Typst bundle pipeline."
