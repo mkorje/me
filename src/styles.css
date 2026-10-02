@@ -1,0 +1,194 @@
+/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
+
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
+
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
+
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
+
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
+
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url("fonts/LatoLatin-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lato";
+  src: url("fonts/LatoLatin-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lato";
+  src: url("fonts/LatoLatin-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lato";
+  src: url("fonts/LatoLatin-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lete Sans Math";
+  src: url("fonts/LeteSansMath.woff2") format("woff2");
+  font-display: swap;
+}
+:root {
+  --fg: #000;
+  --muted: #6e6878;
+  --faint: #a9a3b2;
+  --bg: #fff;
+  --accent: #7851a9;
+  --rule: #e4dfeb;
+}
+html { color-scheme: light; }
+body {
+  max-width: 35rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem;
+  font-family: Lato, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+  color: var(--fg);
+  background: var(--bg);
+}
+math { font-family: "Lete Sans Math", math; }
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+h1 { font-size: 1.3rem; font-weight: 700; margin: 0; }
+h2 { font-size: 1.05rem; font-weight: 700; margin: 1.75rem 0 0.6rem; }
+header p { margin: 0.25rem 0; color: var(--muted); }
+nav { margin-top: 0.25rem; }
+nav ul { display: flex; flex-wrap: wrap; margin: 0; }
+nav li { margin: 0; }
+nav li + li::before {
+  content: "|";
+  color: var(--muted);
+  margin: 0 0.45em;
+}
+ul { list-style: none; padding: 0; margin: 0; }
+main li + li { margin-top: 0.8rem; }
+.meta, .tag { color: var(--muted); }
+.award::before { content: "★ "; color: var(--faint); }
+.tag::before { content: "("; }
+.tag::after { content: ")"; }
+.links > span::before { content: "["; color: var(--fg); }
+.links > span::after { content: "]"; color: var(--fg); }
+/* The gap is on the right, so a link that wraps starts flush left. */
+.links > span:not(:last-child) { margin-right: 0.3em; }
+summary { cursor: pointer; }
+details > p {
+  margin: 0.3rem 0 0;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--rule);
+}
+/* A title on the left with a date on the right. A dropdown title opens
+   below the whole line. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 1em;
+}
+.head > span:first-child, .head > details > summary { flex: 1 1 0; }
+.head > .meta { margin-left: auto; white-space: nowrap; font-size: 0.9em; }
+.head > details { display: contents; }
+.head > details::details-content { order: 1; flex-basis: 100%; }
+/* A title of a paper or talk that opens a dropdown. Its marker, a chevron
+   that turns to point down when open, hangs in the left margin so that titles
+   line up whether or not they have one. */
+details.title > p { margin-bottom: 0.3rem; }
+details.title > summary {
+  position: relative;
+  list-style: none;
+  color: inherit;
+}
+details.title > summary::-webkit-details-marker { display: none; }
+details.title > summary::before {
+  content: "›";
+  display: inline-block;
+  position: absolute;
+  left: -0.9em;
+  color: var(--faint);
+  transition: transform 0.15s;
+}
+details.title[open] > summary::before { transform: rotate(90deg); }
+footer { margin-top: 1.75rem; font-size: 0.85em; }

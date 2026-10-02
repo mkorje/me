@@ -73,11 +73,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1776169885,
-        "narHash": "sha256-l/iNYDZ4bGOAFQY2q8y5OAfBBtrDAaPuRQqWaFHVRXM=",
+        "lastModified": 1790689126,
+        "narHash": "sha256-ilerN1WLSvF+HMjziC/Wv99J5y02maDH+6hZPwsORKg=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+        "rev": "b4fd65b198c599cbe814fcb9f42d25d021595ec9",
         "type": "github"
       },
       "original": {
@@ -129,13 +129,13 @@
     "rust-manifest": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-Mrw0LDR4i/CDGhDZ10IUTGkFow/+yIJGeBKMIWi/nqg=",
+        "narHash": "sha256-k2SXTFvaEZPgDVPvB4IfLj7aQqE4S2J9Jr8XUgY+msM=",
         "type": "file",
-        "url": "https://static.rust-lang.org/dist/channel-rust-1.91.0.toml"
+        "url": "https://static.rust-lang.org/dist/channel-rust-1.92.0.toml"
       },
       "original": {
         "type": "file",
-        "url": "https://static.rust-lang.org/dist/channel-rust-1.91.0.toml"
+        "url": "https://static.rust-lang.org/dist/channel-rust-1.92.0.toml"
       }
     },
     "systems": {
@@ -166,11 +166,11 @@
         "typst": "typst_2"
       },
       "locked": {
-        "lastModified": 1773221749,
-        "narHash": "sha256-QMSQgg6yGOdqu29FdaothiJeed6bHjXdijdohu6SiDM=",
+        "lastModified": 1784150669,
+        "narHash": "sha256-YuiP50mRUr463f7+iS6vxB+hQN4b+ykAKynkiIUJSqg=",
         "owner": "typst",
         "repo": "typst-flake",
-        "rev": "a9422ef705657e06d7964f60ef51973b7c3cbaae",
+        "rev": "688ed24321366871a7605a4c95366f7748f8ec66",
         "type": "github"
       },
       "original": {
@@ -182,11 +182,11 @@
     "typst_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1776677692,
-        "narHash": "sha256-TNtWzFlR94L3bHCRlSw+7glZeUV0PyjkGNRUQeLMI28=",
+        "lastModified": 1790691676,
+        "narHash": "sha256-UxXeGl9Wp8mwtmziurLCTXXNsNz1aROzI84zlpkVHWU=",
         "owner": "typst",
         "repo": "typst",
-        "rev": "4634401c625369f2afc94ba34737eedebd6b6121",
+        "rev": "fddf6e1fbe972b13ea40aeeba48dbba2a0496025",
         "type": "github"
       },
       "original": {

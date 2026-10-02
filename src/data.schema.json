@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Website data",
+  "description": "Data for the website, read by main.typ. Entries in `people` and `events` are keyed by a short id; other entries refer to them by that id rather than repeating the details. `papers` and `talks` are plain lists. Titles, abstracts and awards are Typst markup, so math is written as e.g. `$FF_(p^k)$`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["people", "events", "papers", "talks"],
+  "properties": {
+    "people": {
+      "description": "Coauthors, session chairs and yourself, keyed by id. The `me` entry is special: it fills the page header and is left out of \"with ...\" author lists.",
+      "type": "object",
+      "required": ["me"],
+      "properties": {
+        "me": { "$ref": "#/$defs/me" }
+      },
+      "additionalProperties": { "$ref": "#/$defs/person" }
+    },
+    "events": {
+      "description": "Conferences, workshops and seminar series, keyed by id. A talk points at one of these with `event:`. Every conference and workshop is listed under \"Whereabouts\", whether or not you spoke there. Seminars aren't listed.",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/event" }
+    },
+    "papers": {
+      "description": "Listed newest first by `year`; papers from the same year keep their order here.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/paper" }
+    },
+    "talks": {
+      "description": "Listed newest first by `date`.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/talk" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "description": "A short id, e.g. `austms-2025`.",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "date": {
+      "description": "A date written as YYYY-MM-DD.",
+      "type": "string",
+      "format": "date"
+    },
+    "markup": {
+      "description": "Typst markup, so math is written as e.g. `$FF_(p^k)$`.",
+      "type": "string",
+      "minLength": 1
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "url"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "award": {
+      "$ref": "#/$defs/markup",
+      "description": "Shown on its own line at the bottom of the entry, after a ★. Typst markup, so it can include a link, e.g. `#link(\"https://...\")[Best Student Talk]`.",
+      "examples": ["Best Student Talk"]
+    },
+    "me": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "position", "affiliation", "email"],
+      "properties": {
+        "name": { "description": "Page title and heading.", "type": "string" },
+        "position": {
+          "description": "Shown in the header and the <meta> description.",
+          "type": "string",
+          "examples": ["PhD student"]
+        },
+        "affiliation": { "description": "Shown in the header.", "type": "string" },
+        "email": { "description": "Shown in the header.", "type": "string", "format": "email" },
+        "links": {
+          "description": "Shown in the header, in this order, after the email.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/link" }
+        }
+      }
+    },
+    "person": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": {
+          "description": "The name is linked if present.",
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "short": {
+          "description": "Short name, e.g. `NTDU 14`. Talks at conferences and workshops show this (or `name` if missing), linking to the event under Whereabouts.",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Seminars aren't listed under \"Whereabouts\", and don't need dates or a location.",
+          "enum": ["conference", "workshop", "seminar"]
+        },
+        "url": { "description": "The name is linked if present.", "type": "string", "format": "uri" },
+        "location": {
+          "description": "City and country, e.g. `Canberra, Australia`. Required unless a seminar.",
+          "type": "string"
+        },
+        "host": {
+          "description": "Hosting institution. Shown under Whereabouts before the location, and on seminar talks after the seminar's name.",
+          "type": "string"
+        },
+        "start": { "$ref": "#/$defs/date", "description": "Required unless a seminar." },
+        "end": {
+          "$ref": "#/$defs/date",
+          "description": "Required unless a seminar. Same as `start` for one-day events."
+        },
+        "role": {
+          "description": "Shown after the name, e.g. \"(organiser)\".",
+          "type": "string",
+          "examples": ["organiser", "panellist"]
+        },
+        "sessions": {
+          "description": "Sessions keyed by id. Talks refer to these with `session:`.",
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/id" },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name"],
+            "properties": {
+              "name": {
+                "description": "Shown on talks as \"<short name>, <name> session\", in place of the kind of talk.",
+                "type": "string"
+              },
+              "chair": {
+                "description": "Id from `people`. Not shown on the site yet.",
+                "$ref": "#/$defs/id"
+              }
+            }
+          }
+        },
+        "award": { "$ref": "#/$defs/award", "examples": ["Student travel grant"] }
+      },
+      "if": { "properties": { "kind": { "const": "seminar" } } },
+      "else": { "required": ["location", "start", "end"] }
+    },
+    "arxiv-id": {
+      "description": "An arXiv id. Always quote it: unquoted, YAML reads 2510.10010 as the number 2510.1001.",
+      "type": "string",
+      "pattern": "^([0-9]{4}\\.[0-9]{4,5}|[a-z-]+(\\.[A-Z]{2})?/[0-9]{7})(v[0-9]+)?$",
+      "examples": ["2604.11330"]
+    },
+    "paper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "authors", "status", "arxiv"],
+      "properties": {
+        "title": { "$ref": "#/$defs/markup" },
+        "authors": {
+          "description": "Ids from `people`, in order. Shown as \"with A, B and C\": you're left out, and there's no line if you're the only author.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "status": {
+          "description": "Published papers need a `publication`. A preprint's third line is \"preprint (<date>), <pages> pages\", from its `arxiv` entry.",
+          "enum": ["preprint", "published"]
+        },
+        "publication": {
+          "description": "Where the paper was published. Required for published papers, and not allowed for preprints.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["venue", "doi"],
+          "properties": {
+            "venue": {
+              "description": "Shown as written on the third line, e.g. `Discrete Applied Mathematics 379 (2026) 242–271`.",
+              "type": "string",
+              "minLength": 1
+            },
+            "doi": {
+              "description": "The bare DOI, shown as [doi:<doi>], first in the paper's links, and linking to https://doi.org/<doi>.",
+              "type": "string",
+              "pattern": "^10\\.[0-9]{4,}/\\S+$",
+              "examples": ["10.1016/j.dam.2025.01.001"]
+            }
+          }
+        },
+        "arxiv": {
+          "description": "The paper on arXiv, shown as [arXiv:<id>]. For preprints, its date and pages make up the third line.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "pages", "date"],
+          "properties": {
+            "id": { "$ref": "#/$defs/arxiv-id" },
+            "pages": { "type": "integer", "minimum": 1 },
+            "date": {
+              "$ref": "#/$defs/date",
+              "description": "When the paper went on arXiv. Its year is shown on the right of the title, and papers are listed newest first by it. Preprints show its month and year on the third line."
+            }
+          }
+        },
+        "abstract": {
+          "$ref": "#/$defs/markup",
+          "description": "Clicking the paper's title opens it below the title. Typst markup."
+        },
+        "code": { "description": "Shown as [code].", "type": "string", "format": "uri" },
+        "award": { "$ref": "#/$defs/award" }
+      },
+      "if": { "properties": { "status": { "const": "published" } } },
+      "then": { "required": ["publication"] },
+      "else": { "properties": { "publication": false } }
+    },
+    "talk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "date", "event"],
+      "properties": {
+        "title": { "$ref": "#/$defs/markup" },
+        "date": { "$ref": "#/$defs/date" },
+        "event": { "$ref": "#/$defs/id", "description": "Id from `events`." },
+        "session": {
+          "$ref": "#/$defs/id",
+          "description": "Id from that event's `sessions`."
+        },
+        "kind": {
+          "description": "Defaults to contributed. For talks at conferences and workshops without a `session`, shown as e.g. \"NTDU 14, invited talk\" (or \"..., poster\"). Not shown for seminar talks or talks in a session.",
+          "enum": ["contributed", "invited", "plenary", "poster"],
+          "default": "contributed"
+        },
+        "length": {
+          "description": "Length in minutes. Not shown on the site yet.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "slides": {
+          "description": "Shown as [slides]. A URL, or a path on the site.",
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "video": { "description": "Shown as [video].", "type": "string", "format": "uri" },
+        "abstract": {
+          "$ref": "#/$defs/markup",
+          "description": "Clicking the talk's title opens it below the title. Typst markup."
+        },
+        "award": { "$ref": "#/$defs/award" }
+      }
+    }
+  }
+}

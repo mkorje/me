@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=data.schema.json
+
+people:
+  me:
+    name: Max Kortge
+    position: PhD student
+    affiliation: School of Mathematics, Example University
+    email: max@mkor.je
+    links:
+      - name: GitHub
+        url: https://github.com/mkorje
+      - name: arXiv
+        url: https://arxiv.org/a/kortge_m_1
+      - name: ORCID
+        url: https://orcid.org/0009-0008-2357-5305
+  alex:
+    name: Alex Ghitza
+    url: https://aghitza.github.io
+  dhruv:
+    name: Dhruv Gupta
+
+events:
+  austms-2026:
+    name: 70th AustMS Annual Conference
+    short: AustMS 2026
+    kind: conference
+    location: Perth, Australia
+    host: University of Western Australia
+    url: https://austms2026.org.au
+    start: 2026-12-01
+    end: 2026-12-04
+    sessions:
+      number-theory:
+        name: Number Theory
+
+  student-seminar-rep-theory-2026s2:
+    name: Representation Theory Student Seminar 2026 Semester 2
+    kind: seminar
+    host: University of Melbourne
+    url: https://representationtheory.science.unimelb.edu.au/#tab430
+
+  ntdu-14:
+    name: Number Theory Down Under 14
+    short: NTDU 14
+    kind: conference
+    location: Canberra, Australia
+    host: UNSW Canberra City Campus
+    url: https://conference.unsw.edu.au/en/number-theory-down-under
+    start: 2026-08-31
+    end: 2026-09-04
+
+  nuts-2026:
+    name: NUmber Theory Seminar 2026
+    short: NuTS 2026
+    kind: seminar
+    host: University of Melbourne
+    url: https://aghitza.github.io/seminar/nuts2026.html
+
+  austms-2025:
+    name: 69th AustMS Annual Conference
+    short: AustMS 2025
+    kind: conference
+    location: Melbourne, Australia
+    host: La Trobe University Bundoora Campus
+    url: https://austms2025.org.au
+    start: 2025-12-09
+    end: 2025-12-12
+    sessions:
+      number-theory:
+        name: Number Theory
+
+  nuts-2025:
+    name: NUmber Theory Seminar 2025
+    short: NuTS 2025
+    kind: seminar
+    host: University of Melbourne
+    url: https://aghitza.github.io/seminar/nuts2025.html
+
+papers:
+  - title: The solvability of the inverse volcano problem over non-prime finite fields
+    authors: [alex, dhruv, me]
+    status: preprint
+    arxiv:
+      id: "2604.11330"
+      pages: 33
+      date: 2026-04-13
+    code: https://github.com/mkorje/class-group-tabulation
+    abstract: |
+      For a finite field $FF_(p^k)$ and a prime $ell != p$, consider the graph $G$ of $ell$-isogenies between ordinary elliptic curves over $FF_(p^k)$.
+      Kohel proved that the connected components of $G$ have a remarkable structure, now called an $ell$-volcano graph.
+      Bambury, Campagna, and Pazuki investigated the inverse volcano problem: given a volcano graph $V$, can one find it as a connected component of $G$ over $FF_(p^k)$?
+      They gave a complete positive answer over $FF_p$, and described a specific counterexample over $FF_(p^2)$. \
+      In this paper, we generalise the results of Bambury--Campagna--Pazuki by providing a precise framework for the inverse volcano problem over $FF_(p^k)$.
+      The solvability of the problem for an $ell$-volcano graph $V$ of depth $d$ is typically determined by the relation between $d$ and the $ell$-valuation $r$ of $k$.
+      When $r$ is small in comparison to $d$, we prove that there are infinitely many primes $p$ solving the inverse problem for $V$.
+      The situation where $r$ is large in comparison to $d$ is more delicate: in many cases we prove that the inverse problem for $V$ is unsolvable; in a few other cases the problem appears to be solvable, but our proof of this is conditional on a variant of the Cohen--Lenstra heuristics for class groups of imaginary quadratic fields.
+      We provide some computational evidence in support of these modified heuristics.
+
+talks:
+  - title: Borel subgroups and maximal tori
+    date: 2026-10-06
+    event: student-seminar-rep-theory-2026s2
+    length: 50
+
+  - title: 'In search of explosive primes: the inverse volcano problem'
+    date: 2026-09-01
+    event: ntdu-14
+    kind: contributed
+    length: 20
+    award: JNT Student Talk Prize, Honourable Mention
+    abstract: |
+      The connected components of the graph of $ell$-isogenies between ordinary elliptic curves over a finite field have a remarkable structure called $ell$-volcanoes.
+      The inverse volcano problem asks whether a given volcano can occur as a connected component over $FF_(p^k)$, and for which primes $p$.
+      We call such primes $k$-explosive.
+      Every volcano has infinitely many $1$-explosive primes, but existence can fail for larger $k$. \
+      Our recent work, joint with Alex Ghitza and Dhruv Gupta, resolves the problem in most cases.
+      After briefly surveying our results, I will work through one case from start to finish.
+      Along the way, we will see how a question about isogeny graphs becomes one about class groups of imaginary quadratic orders, and why the depth of the volcano must be compared with the $ell$-adic valuation of $k$.
+
+  - title: 'Section 2 in the paper #link("https://www.sciencedirect.com/science/article/pii/S0001870817301640")[Super-Golden-Gates for $op("PU")(2)$] by Parzanchevski and Sarnak'
+    date: 2026-08-03
+    event: nuts-2026
+    length: 50
+
+  - title: On the inverse volcano problem over non-prime finite fields
+    date: 2025-12-11
+    event: austms-2025
+    session: number-theory
+    kind: contributed
+    length: 20
+    abstract: |
+      The graph of $ell$-isogenies between elliptic curves over finite fields has connected components called volcanoes.
+      The inverse volcano problem asks whether, given such a volcano, one can find a finite field $FF_(p^k)$ and a prime $ell$ such that the graph of $ell$-isogenies contains the volcano.
+      Over $FF_p$ it is known that the answer is affirmative.
+      I will discuss some results in the non-prime field case.
+
+  - title: Isogeny graphs of elliptic curves
+    date: 2025-03-17
+    event: nuts-2025
+    length: 50
