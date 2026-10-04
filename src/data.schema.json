@@ -16,7 +16,7 @@
       "additionalProperties": { "$ref": "#/$defs/person" }
     },
     "events": {
-      "description": "Conferences, workshops and seminar series, keyed by id. A talk points at one of these with `event:`. Every conference and workshop is listed under \"Whereabouts\", whether or not you spoke there. Seminars aren't listed.",
+      "description": "Conferences, workshops, seminar series and projects, keyed by id. A talk points at one of these with `event:`. Every conference and workshop is listed under \"Whereabouts\", whether or not you spoke there. Seminars and projects aren't listed.",
       "type": "object",
       "additionalProperties": { "$ref": "#/$defs/event" }
     },
@@ -55,6 +55,13 @@
         "name": { "type": "string", "minLength": 1 },
         "url": { "type": "string", "format": "uri" }
       }
+    },
+    "file": {
+      "description": "A URL, or a path in `src/files/` relative to `src/`, e.g. `files/slides.pdf`. A file is copied to the same path on the site.",
+      "type": "string",
+      "pattern": "^([a-zA-Z][a-zA-Z0-9+.-]*:|files/)",
+      "format": "uri-reference",
+      "examples": ["files/slides.pdf"]
     },
     "award": {
       "$ref": "#/$defs/markup",
@@ -105,22 +112,22 @@
           "type": "string"
         },
         "kind": {
-          "description": "Seminars aren't listed under \"Whereabouts\", and don't need dates or a location.",
-          "enum": ["conference", "workshop", "seminar"]
+          "description": "A project is e.g. a research subject or scholarship program. Seminars and projects aren't listed under \"Whereabouts\", and don't need dates or a location.",
+          "enum": ["conference", "workshop", "seminar", "project"]
         },
         "url": { "description": "The name is linked if present.", "type": "string", "format": "uri" },
         "location": {
-          "description": "City and country, e.g. `Canberra, Australia`. Required unless a seminar.",
+          "description": "City and country, e.g. `Canberra, Australia`. Required unless a seminar or project.",
           "type": "string"
         },
         "host": {
-          "description": "Hosting institution. Shown under Whereabouts before the location, and on seminar talks after the seminar's name.",
+          "description": "Hosting institution. Shown under Whereabouts before the location, and on seminar and project talks after the event's name.",
           "type": "string"
         },
-        "start": { "$ref": "#/$defs/date", "description": "Required unless a seminar." },
+        "start": { "$ref": "#/$defs/date", "description": "Required unless a seminar or project." },
         "end": {
           "$ref": "#/$defs/date",
-          "description": "Required unless a seminar. Same as `start` for one-day events."
+          "description": "Required unless a seminar or project. Same as `start` for one-day events."
         },
         "role": {
           "description": "Shown after the name, e.g. \"(organiser)\".",
@@ -149,7 +156,7 @@
         },
         "award": { "$ref": "#/$defs/award", "examples": ["Student travel grant"] }
       },
-      "if": { "properties": { "kind": { "const": "seminar" } } },
+      "if": { "properties": { "kind": { "enum": ["seminar", "project"] } } },
       "else": { "required": ["location", "start", "end"] }
     },
     "arxiv-id": {
@@ -231,7 +238,7 @@
           "description": "Id from that event's `sessions`."
         },
         "kind": {
-          "description": "Defaults to contributed. For talks at conferences and workshops without a `session`, shown as e.g. \"NTDU 14, invited talk\" (or \"..., poster\"). Not shown for seminar talks or talks in a session.",
+          "description": "Defaults to contributed. For talks at conferences and workshops without a `session`, shown as e.g. \"NTDU 14, invited talk\" (or \"..., poster\"). Not shown for seminar or project talks, or talks in a session.",
           "enum": ["contributed", "invited", "plenary", "poster"],
           "default": "contributed"
         },
@@ -240,11 +247,8 @@
           "type": "integer",
           "minimum": 1
         },
-        "slides": {
-          "description": "Shown as [slides]. A URL, or a path on the site.",
-          "type": "string",
-          "format": "uri-reference"
-        },
+        "slides": { "$ref": "#/$defs/file", "description": "Shown as [slides]." },
+        "poster": { "$ref": "#/$defs/file", "description": "Shown as [poster]." },
         "video": { "description": "Shown as [video].", "type": "string", "format": "uri" },
         "abstract": {
           "$ref": "#/$defs/markup",

@@ -33,6 +33,12 @@ events:
       number-theory:
         name: Number Theory
 
+  science-research-project-2026s2:
+    name: Science Research Project 2026 Semester 2
+    kind: project
+    host: University of Melbourne
+    url: https://handbook.unimelb.edu.au/2026/subjects/scie30001
+
   student-seminar-rep-theory-2026s2:
     name: Representation Theory Student Seminar 2026 Semester 2
     kind: seminar
@@ -76,6 +82,12 @@ events:
     host: University of Melbourne
     url: https://aghitza.github.io/seminar/nuts2025.html
 
+  vacation-scholarship-2025:
+    name: 2024/2025 Mathematics and Statistics Vacation Scholarship Program
+    kind: project
+    host: University of Melbourne
+    url: https://ms.unimelb.edu.au/engage/vacation-scholarships
+
 papers:
   - title: The solvability of the inverse volcano problem over non-prime finite fields
     authors: [alex, dhruv, me]
@@ -97,6 +109,22 @@ papers:
       We provide some computational evidence in support of these modified heuristics.
 
 talks:
+  # - title: ??
+  #   date: 2026-12-??
+  #   event: austms-2026
+  #   session: number-theory
+  #   kind: contributed
+  #   length: 20
+  #   slides: files/austms-2026.pdf
+  #   abstract: |
+  #     ??
+
+  # - title: ??
+  #   date: 2026-??-??
+  #   event: science-research-project-2026s2
+  #   length: 15
+  #   slides: files/??.pdf
+
   - title: Borel subgroups and maximal tori
     date: 2026-10-06
     event: student-seminar-rep-theory-2026s2
@@ -108,6 +136,7 @@ talks:
     kind: contributed
     length: 20
     award: JNT Student Talk Prize, Honourable Mention
+    slides: files/ntdu-14.pdf
     abstract: |
       The connected components of the graph of $ell$-isogenies between ordinary elliptic curves over a finite field have a remarkable structure called $ell$-volcanoes.
       The inverse volcano problem asks whether a given volcano can occur as a connected component over $FF_(p^k)$, and for which primes $p$.
@@ -117,7 +146,7 @@ talks:
       After briefly surveying our results, I will work through one case from start to finish.
       Along the way, we will see how a question about isogeny graphs becomes one about class groups of imaginary quadratic orders, and why the depth of the volcano must be compared with the $ell$-adic valuation of $k$.
 
-  - title: 'Section 2 in the paper #link("https://www.sciencedirect.com/science/article/pii/S0001870817301640")[Super-Golden-Gates for $op("PU")(2)$] by Parzanchevski and Sarnak'
+  - title: 'Section 2 in the paper #html.cite(link("https://www.sciencedirect.com/science/article/pii/S0001870817301640")[Super-Golden-Gates for $op("PU")(2)$]) by Parzanchevski and Sarnak'
     date: 2026-08-03
     event: nuts-2026
     length: 50
@@ -128,6 +157,7 @@ talks:
     session: number-theory
     kind: contributed
     length: 20
+    slides: files/austms-2025.pdf
     abstract: |
       The graph of $ell$-isogenies between elliptic curves over finite fields has connected components called volcanoes.
       The inverse volcano problem asks whether, given such a volcano, one can find a finite field $FF_(p^k)$ and a prime $ell$ such that the graph of $ell$-isogenies contains the volcano.
@@ -138,3 +168,8 @@ talks:
     date: 2025-03-17
     event: nuts-2025
     length: 50
+
+  - title: Isogeny graphs of ordinary elliptic curves over finite fields
+    date: 2025-02-14
+    event: vacation-scholarship-2025
+    poster: files/vacation-scholarship-2025.pdf

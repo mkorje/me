@@ -25,25 +25,30 @@
   datetime(year: y, month: m, day: d)
 }
 
-#let fmt-date(d) = d.display("[day padding:none] [month repr:short] [year]")
+// A date in a <time>, by default like "20 Nov 2024". Further arguments, e.g. a
+// class, go to the <time>.
+#let fmt-date(
+  d,
+  format: "[day padding:none] [month repr:short] [year]",
+  ..attrs,
+) = html.time(datetime: d, ..attrs, d.display(format))
 
-// "8–12 Dec 2025", "28 Jul – 2 Aug 2025", or "20 Nov 2024".
-#let fmt-range(start, end) = {
+// "8–12 Dec 2025", "28 Jul – 2 Aug 2025", or "20 Nov 2024". A <time> can't
+// hold a range, so each end gets its own, in a <span> that further arguments
+// go to.
+#let fmt-range(start, end, ..attrs) = {
   let (s, e) = (parse-date(start), parse-date(end))
-  if s == e {
-    fmt-date(s)
-  } else if s.year() != e.year() {
+  if s == e { return fmt-date(s, ..attrs) }
+  html.span(..attrs, if s.year() != e.year() {
     [#fmt-date(s) – #fmt-date(e)]
   } else if s.month() != e.month() {
-    [#s.display("[day padding:none] [month repr:short]") – #fmt-date(e)]
+    [#fmt-date(s, format: "[day padding:none] [month repr:short]") – #fmt-date(e)]
   } else {
-    [#s.day()–#fmt-date(e)]
-  }
+    [#fmt-date(s, format: "[day padding:none]")–#fmt-date(e)]
+  })
 }
 
 // ---- Small pieces -----------------------------------------------------------
-
-#let meta(body) = html.span(class: "meta", body)
 
 #let person(id) = {
   let p = data.people.at(id)
@@ -61,37 +66,52 @@
   html.span(class: "award", markup(entry.award))
 }
 
-// A row of small links, e.g. [arXiv] [slides], skipping missing ones; or
-// `none` if all are missing.
+// Small links, e.g. [arXiv] [slides], skipping missing ones; or `none` if all
+// are missing. The brackets are outside the links.
 #let links(..pairs) = {
   let items = pairs.pos().filter(((_, url)) => url != none)
   if items.len() > 0 {
-    // Each link is wrapped so that CSS can bracket it without the brackets
-    // being part of the link.
-    html.span(
-      class: "links",
-      items.map(((name, url)) => html.span(link(url, name))).join[ ],
-    )
+    items.map(((name, url)) => [\[#link(url, name)\]]).join[ ]
   }
 }
 
-// The lines of an entry below its title, skipping those that are `none`.
-#let lines(..lines) = lines.pos().filter(x => x != none).join(linebreak())
+// The lines of an entry below its title, as one paragraph, skipping those
+// that are `none`.
+#let lines(..lines) = html.p(lines.pos().filter(x => x != none).join(linebreak()))
 
 #let event-name(e) = if "url" in e { link(e.url, e.name) } else { e.name }
 
-// A title that opens a dropdown below it, e.g. with an abstract.
-#let title-dropdown(title, body) = html.details(class: "title", {
-  html.summary(title)
-  body
-})
+// Seminars and projects have no dates or location, and aren't listed under
+// Whereabouts.
+#let is-listed(e) = e.kind not in ("seminar", "project")
 
-// A title on the left with a date on the right. With a body, the title is a
-// dropdown that opens below this line; see `.head` in style.css.
-#let head(title, date, body: none) = html.div(class: "head", {
-  if body != none { title-dropdown(title, body) } else { html.span(title) }
-  meta(date)
-})
+// A talk's slides or poster: a URL, or a file in files/ that's copied to the
+// same path on the site and labelled with it.
+#let talk-files(t) = ("slides", "poster").filter(key => key in t).map(key => t.at(key))
+#let is-local(path) = not path.contains(regex("^[a-zA-Z][a-zA-Z0-9+.-]*:"))
+// What to link to for a talk's slides or poster, or `none` if it has none.
+#let talk-file(t, key) = {
+  let path = t.at(key, default: none)
+  if path != none and is-local(path) { label(path) } else { path }
+}
+
+// A title, with the label if any, on the left and a date on the right. With a
+// body, e.g. an abstract, they are the summary of a dropdown that opens below
+// them; see `summary` in styles.css.
+#let head(title, date, body: none, label: none) = {
+  // An `html.h3` rather than a `heading`, which is a `block` and so would put
+  // the date next to it in a <p>.
+  let title = [#html.h3(title)#label]
+  if body != none {
+    html.details({
+      html.summary(title + date)
+      body
+    })
+  } else {
+    title
+    date
+  }
+}
 
 // ---- Sections ---------------------------------------------------------------
 
@@ -105,15 +125,17 @@
       message: "quote the arXiv id of \"" + p.title + "\" in data.yaml",
     )
     let date = parse-date(arxiv.date)
-    head(markup(p.title), str(date.year()), body: if "abstract" in p {
-      html.p(markup(p.abstract))
-    })
+    head(
+      markup(p.title),
+      fmt-date(date, format: "[year]", class: "date"),
+      body: if "abstract" in p { html.p(markup(p.abstract)) },
+    )
 
     // Published papers: the venue, as written. Preprints: when they went on
     // arXiv, and their length.
     let publication = p.at("publication", default: none)
     let status = if publication != none { publication.venue } else [
-      preprint (#date.display("[month repr:long] [year]")), #arxiv.pages pages
+      preprint (#fmt-date(date, format: "[month repr:long] [year]")), #arxiv.pages pages
     ]
     lines(
       coauthors(p.authors),
@@ -136,18 +158,22 @@
     let event = data.events.at(t.event)
     let kind = t.at("kind", default: "contributed")
 
-    head(markup(t.title), fmt-date(parse-date(t.date)), body: if (
-      "abstract" in t
-    ) { html.p(markup(t.abstract)) })
+    head(
+      markup(t.title),
+      fmt-date(parse-date(t.date), class: "date"),
+      body: if "abstract" in t { html.p(markup(t.abstract)) },
+    )
 
-    // Seminars: the seminar and its host. Conferences and workshops: the
-    // event's short name, linking to it under Whereabouts, then the session
-    // or the kind of talk.
-    let event-line = if event.kind == "seminar" {
+    // Seminars and projects: the event and its host. Conferences and
+    // workshops: the event's short name, an abbreviation of its full one,
+    // linking to it under Whereabouts, then the session or the kind of talk.
+    let event-line = if not is-listed(event) {
       event-name(event)
       if "host" in event [, #event.host]
     } else {
-      link(label(t.event), event.at("short", default: event.name))
+      link(label(t.event), if "short" in event {
+        html.abbr(title: event.name, event.short)
+      } else { event.name })
       if "session" in t [, #event.sessions.at(t.session).name session] else if (
         kind == "poster"
       ) [, poster] else [, #kind talk]
@@ -156,7 +182,8 @@
       event-line,
       award(t),
       links(
-        ("slides", t.at("slides", default: none)),
+        ("slides", talk-file(t, "slides")),
+        ("poster", talk-file(t, "poster")),
         ("video", t.at("video", default: none)),
       ),
     )
@@ -167,17 +194,17 @@
   let events = data
     .events
     .pairs()
-    .filter(((_, e)) => e.kind != "seminar")
+    .filter(((_, e)) => is-listed(e))
     .sorted(key: ((_, e)) => parse-date(e.start))
     .rev()
   list(..events.map(((id, e)) => {
     let name = {
-      // Labelled so that talks can link here.
-      [#html.span(event-name(e))#label(id)]
+      event-name(e)
       let role = e.at("role", default: none)
       if role != none [ #html.span(class: "tag", role)]
     }
-    head(name, fmt-range(e.start, e.end))
+    // Labelled so that talks can link here.
+    head(name, fmt-range(e.start, e.end, class: "date"), label: label(id))
     lines(
       (e.at("host", default: none), e.location)
         .filter(x => x != none)
@@ -199,6 +226,10 @@
 ) {
   asset("fonts/" + file, read("fonts/" + file, encoding: none))
 }
+// Local slides and posters, once each even if shared between talks.
+#for path in data.talks.map(talk-files).flatten().filter(is-local).dedup() {
+  [#asset(path, read(path, encoding: none))#label(path)]
+}
 
 #document("index.html", title: me.name, html.html(lang: "en", {
   html.head({
@@ -211,7 +242,8 @@
   html.body({
     html.header({
       title()
-      html.nav(list(
+      // Contact details for the page's author, rather than navigation.
+      html.address(list(
         link("mailto:" + me.email)[email],
         ..me.links.map(l => link(l.url, l.name)),
       ))
@@ -222,14 +254,20 @@
       My interests are in number theory, currently isogeny graphs.
       I also contribute to open source software, in particular #link("https://github.com/typst/typst")[Typst].
 
-      = Papers <papers>
-      #papers()
+      #html.section[
+        = Papers <papers>
+        #papers()
+      ]
 
-      = Talks <talks>
-      #talks()
+      #html.section[
+        = Talks <talks>
+        #talks()
+      ]
 
-      = Whereabouts <whereabouts>
-      #events()
+      #html.section[
+        = Whereabouts <whereabouts>
+        #events()
+      ]
     ]
 
     html.footer({
